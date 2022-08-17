@@ -31,7 +31,6 @@ class _RunAppState extends State<RunApp> {
   @override
   void initState() {
     super.initState();
-    print("12434");
     getBackInformation();
   }
 
@@ -40,7 +39,7 @@ class _RunAppState extends State<RunApp> {
 
     listMap.forEach((element) {
       double distance = Geolocator.distanceBetween(116.30682706832886, 40.15613868448505, element["latitude"], element["longitude"]);
-      element["D"] = distance;
+      element["D"] = distance / 1000;
 
       DateTime startTime = DateTime.fromMillisecondsSinceEpoch(element["startTimeUtc"] * 1000);
       var dys = startTime.difference(DateTime.now()).inDays;
@@ -52,7 +51,10 @@ class _RunAppState extends State<RunApp> {
 
       element["result"] = double.parse(a.toStringAsFixed(5));
     });
-    print("原 ----------------------》" + listMap.toString());
+    listMap.sort((key1, key2) {
+      return key1["result"].compareTo(key2["result"]);
+    });
+    print("    " + listMap.toString());
 
     print("改 ----------------------》" + listMap.toString());
 
@@ -71,42 +73,95 @@ class _RunAppState extends State<RunApp> {
       ),
       body: Column(
         children: [
-          Container(
-            alignment: Alignment.center,
-            child: Text("D的值为： ${listMap[0]["D"].toString()}",),
-          ),
-          Container(
-            alignment: Alignment.center,
-            margin: const EdgeInsets.only(top: 15.0),
-            child: Text("T的值为： ${listMap[1]["T"].toString()}"),
-          ),
-          Container(
-            alignment: Alignment.center,
-            margin: const EdgeInsets.only(top: 15.0),
-            child: Text("L的值为： ${listMap[0]["L"].toString()}"),
-          ),
-          Container(
-            alignment: Alignment.center,
-            margin: const EdgeInsets.only(top: 15.0),
-            child: Text("F的值为： ${listMap[0]["F"].toString()}"),
-          ),
+          // Container(
+          //   alignment: Alignment.center,
+          //   child: Text("D的值为： ${listMap[0]["D"].toString()}",),
+          // ),
+          // Container(
+          //   alignment: Alignment.center,
+          //   margin: const EdgeInsets.only(top: 15.0),
+          //   child: Text("T的值为： ${listMap[1]["T"].toString()}"),
+          // ),
+          // Container(
+          //   alignment: Alignment.center,
+          //   margin: const EdgeInsets.only(top: 15.0),
+          //   child: Text("L的值为： ${listMap[0]["L"].toString()}"),
+          // ),
+          // Container(
+          //   alignment: Alignment.center,
+          //   margin: const EdgeInsets.only(top: 15.0),
+          //   child: Text("F的值为： ${listMap[0]["F"].toString()}"),
+          // ),
           Expanded(child:
               ListView.builder(itemBuilder: (BuildContext context, int index) {
                 return Container(
-                  height: 40.0,
-                  alignment: Alignment.center,
                   margin: EdgeInsets.all(10.0),
+                  padding: EdgeInsets.all(20.0),
                   decoration: BoxDecoration(
                     color: Colors.black,
                     borderRadius: BorderRadius.circular(16.0)
                   ),
-                  child: Text(
-                    listMap[index]["name"],
-                    style: TextStyle(
-                      letterSpacing: 5.0,
-                      color: Colors.white
-                    ),
-                  ),
+                  child: Column(
+                    children: [
+                      Text(
+                        listMap[index]["name"],
+                        style: TextStyle(
+                            letterSpacing: 5.0,
+                            fontSize: 25.0,
+                            color: Colors.white
+                        ),
+                      ),
+                      Container(
+                        alignment: Alignment.center,
+                        child: Text("D的值为： ${listMap[index]["D"].toString()} km",
+                          style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 18.0
+                        ),
+                        ),
+                      ),
+                      Container(
+                        alignment: Alignment.center,
+                        margin: const EdgeInsets.only(top: 15.0),
+                        child: Text("T的值为： ${listMap[index]["T"].toString()}",
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 18.0
+                          ),
+                        ),
+                      ),
+                      Container(
+                        alignment: Alignment.center,
+                        margin: const EdgeInsets.only(top: 15.0),
+                        child: Text("L的值为： ${listMap[index]["L"].toString()}",
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 18.0
+                          ),
+                        ),
+                      ),
+                      Container(
+                        alignment: Alignment.center,
+                        margin: const EdgeInsets.only(top: 15.0),
+                        child: Text("F的值为： ${listMap[index]["F"].toString()}",
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 18.0
+                          ),
+                        ),
+                      ),
+                      Container(
+                        alignment: Alignment.center,
+                        margin: const EdgeInsets.only(top: 15.0),
+                        child: Text("result结果的值为： ${listMap[index]["result"].toString()}",
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 18.0
+                          ),
+                        ),
+                      ),
+                    ],
+                  )
                 );
               },
                 itemCount: listMap.length,
